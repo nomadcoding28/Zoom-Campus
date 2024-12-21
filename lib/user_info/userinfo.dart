@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zoomcampus/bottomNavigation/bottomNavigation.dart';
+import 'package:zoomcampus/controller/controller.dart';
+import 'package:zoomcampus/data/data.dart' as dt;
 import 'package:zoomcampus/user_info/registerDetails.dart';
 
 class Userinfo extends StatefulWidget {
@@ -14,7 +16,6 @@ class _UserinfoState extends State<Userinfo> {
   String selectedGender = 'Male'; // Default gender
   String selectedProgram = 'Computer Science'; // Default program
   String otherProgram = ''; // To hold the custom program name
-  bool isOtherProgramSelected = false; // Flag to show/hide the text field
 
   final List<String> programs = [
     'Computer Science',
@@ -25,6 +26,18 @@ class _UserinfoState extends State<Userinfo> {
     'Information Technology',
     'Others',
   ];
+
+  // TextEditingControllers for inputs
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController otherProgramController = TextEditingController(); // For "Other" program input
+
+  @override
+  void dispose() {
+    // Dispose of controllers to avoid memory leaks
+    phoneController.dispose();
+    otherProgramController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,9 +122,6 @@ class _UserinfoState extends State<Userinfo> {
                   _buildGenderSelection(),
                   const SizedBox(height: 20),
                   _buildProgramDropdown(),
-                  if (isOtherProgramSelected) _buildOtherProgramInput(),
-                  const SizedBox(height: 20),
-                  // _buildRememberMeCheckbox(),
                   _buildSubmitButton(context),
                   const SizedBox(height: 15),
                   const Divider(),
@@ -128,6 +138,7 @@ class _UserinfoState extends State<Userinfo> {
 
   Widget _buildPhoneInput() {
     return TextField(
+      controller: phoneController,
       keyboardType: TextInputType.phone,
       decoration: InputDecoration(
         hintText: 'Phone',
@@ -197,52 +208,31 @@ class _UserinfoState extends State<Userinfo> {
           onChanged: (value) {
             setState(() {
               selectedProgram = value!;
-              isOtherProgramSelected = (value == 'Others');
+              if (value == 'Others') {
+                // Show other program input
+                otherProgram = 'Others';
+              } else {
+                otherProgram = ''; // Clear other program if not selected
+              }
             });
           },
         ),
+        if (selectedProgram == 'Others')
+          TextField(
+            controller: otherProgramController,
+            decoration: InputDecoration(
+              hintText: 'Enter Program',
+              prefixIcon: const Icon(Icons.text_fields),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              filled: true,
+              fillColor: Colors.grey[200],
+            ),
+          ),
       ],
     );
   }
-
-  Widget _buildOtherProgramInput() {
-    return TextField(
-      onChanged: (value) {
-        setState(() {
-          otherProgram = value;
-        });
-      },
-      decoration: InputDecoration(
-        hintText: 'Enter Program',
-        prefixIcon: const Icon(Icons.text_fields),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        filled: true,
-        fillColor: Colors.grey[200],
-      ),
-    );
-  }
-
-  // Widget _buildRememberMeCheckbox() {
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.start,
-  //     children: [
-  //       Checkbox(
-  //         value: rememberMe,
-  //         onChanged: (bool? value) {
-  //           setState(() {
-  //             rememberMe = value ?? false;
-  //           });
-  //         },
-  //       ),
-  //       const Text(
-  //         'Remember Me',
-  //         style: TextStyle(fontSize: 14, color: Colors.grey),
-  //       ),
-  //     ],
-  //   );
-  // }
 
   Widget _buildSubmitButton(BuildContext context) {
     return MaterialButton(
@@ -252,13 +242,31 @@ class _UserinfoState extends State<Userinfo> {
       height: 40,
       color: Colors.green,
       onPressed: () {
-        String program = isOtherProgramSelected ? otherProgram : selectedProgram;
-        print('Selected Gender: $selectedGender');
-        print('Selected Program: $program');
+        // Retrieve values from inputs
+        final phone = phoneController.text.trim();
+        final program = selectedProgram == 'Others'
+            ? otherProgramController.text.trim()
+            : selectedProgram;
+
+        if (phone.isEmpty || program.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please fill all details!')),
+          );
+          return;
+        }
+
+        // print('Phone: $phone');
+        // print('Gender: $selectedGender');
+        // print('Program: $program');
+        dt.program = selectedProgram.toString();
+        dt.gender = selectedGender;
+        dt.phNo = phone;
+
+        // Navigate to RegisterDetailsPage
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>  RegisterDetailsPage(),
+            builder: (context) => const RegisterDetailsPage(),
           ),
         );
       },

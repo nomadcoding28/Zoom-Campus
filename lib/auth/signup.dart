@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zoomcampus/bottomNavigation/bottomNavigation.dart';
+import 'package:zoomcampus/controller/controller.dart';
+import 'package:zoomcampus/data/data.dart' as dt;
 import 'package:zoomcampus/user_info/userinfo.dart';
 import 'package:zoomcampus/widgets/input.dart';
 
@@ -11,7 +13,12 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+
+  final TextEditingController username = TextEditingController();
+  final TextEditingController mail = TextEditingController();
+  final TextEditingController password = TextEditingController();
   bool rememberme = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,9 +81,10 @@ class _SignUpState extends State<SignUp> {
                           const SizedBox(
                             height: 20,
                           ),
-                          const SizedBox(
+                          SizedBox(
                             height: 40,
                             child: Input(
+                              controller: username,
                               hintText: 'Username',
                               icon: Icons.person,
                             ),
@@ -84,9 +92,11 @@ class _SignUpState extends State<SignUp> {
                           const SizedBox(
                             height: 16,
                           ),
-                          const SizedBox(
+                          SizedBox(
                             height: 40,
                             child: Input(
+                              controller: mail,
+                              key: GlobalObjectKey("mail"),
                               hintText: 'Email',
                               icon: Icons.email_outlined,
                             ),
@@ -94,9 +104,10 @@ class _SignUpState extends State<SignUp> {
                           const SizedBox(
                             height: 16,
                           ),
-                          const SizedBox(
+                          SizedBox(
                             height: 40,
                             child: Input(
+                              controller: password,
                               hintText: 'password',
                               icon: Icons.lock,
                               isObscure: true,
@@ -125,6 +136,12 @@ class _SignUpState extends State<SignUp> {
                             height: 40,
                             color: Colors.green,
                             onPressed: () {
+                              dt.mail = mail.text;
+                              dt.password = password.text;
+                              dt.username = username.text;
+
+                              // Map<String,String> t = {"mail":"nirmithmr@gmail.com"};
+                              // registerUser(t);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zoomcampus/home/passengerpage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,9 +9,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String selectedRole = '';
   int _currentIndex = 0;
+
   final TextEditingController gateController = TextEditingController();
+  final TextEditingController otherGateController = TextEditingController();
   final TextEditingController vehicleRegController = TextEditingController();
   final TextEditingController seatsController = TextEditingController();
+
+  String selectedGate = 'Gate 1'; // Default gate selection
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +65,33 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
-              TextField(
-                controller: gateController,
+              DropdownButtonFormField<String>(
+                value: selectedGate,
+                items: ['Gate 1', 'Gate 2', 'Others']
+                    .map((gate) => DropdownMenuItem<String>(
+                          value: gate,
+                          child: Text(gate),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedGate = value!;
+                  });
+                },
                 decoration: const InputDecoration(
-                  labelText: 'Gate',
+                  labelText: 'Select Gate',
                   border: OutlineInputBorder(),
                 ),
               ),
+              const SizedBox(height: 10),
+              if (selectedGate == 'Others') // Show text field if "Others" is selected
+                TextField(
+                  controller: otherGateController,
+                  decoration: const InputDecoration(
+                    labelText: 'Enter Gate Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
               const SizedBox(height: 20),
               if (selectedRole == 'Rider') ...[
                 const Text(
@@ -86,13 +111,31 @@ class _HomePageState extends State<HomePage> {
                   controller: seatsController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    labelText: 'Number of Seats Available',
+                    labelText: 'Number of Seats Available (Max 3)',
                     border: OutlineInputBorder(),
                   ),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      final seats = int.tryParse(value);
+                      if (seats == null || seats < 1 || seats > 3) {
+                        seatsController.text = '';
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please enter a valid number of seats (1 to 3).'),
+                          ),
+                        );
+                      }
+                    }
+                  },
                 ),
               ],
               const SizedBox(height: 20),
-              ElevatedButton(
+              MaterialButton(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(31),
+                ),
+                height: 40,
+                color: Colors.green,
                 onPressed: () {
                   if (selectedRole.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -103,11 +146,31 @@ class _HomePageState extends State<HomePage> {
                     return;
                   }
 
-                  final gate = gateController.text;
+                  final gate = selectedGate == 'Others'
+                      ? otherGateController.text.trim()
+                      : selectedGate;
+
+                  if (gate.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please provide a valid gate name.'),
+                      ),
+                    );
+                    return;
+                  }
 
                   if (selectedRole == 'Rider') {
-                    final vehicleReg = vehicleRegController.text;
-                    final seats = seatsController.text;
+                    final vehicleReg = vehicleRegController.text.trim();
+                    final seats = seatsController.text.trim();
+
+                    if (vehicleReg.isEmpty || seats.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please fill all rider details.'),
+                        ),
+                      );
+                      return;
+                    }
 
                     print('Rider Gate: $gate');
                     print('Vehicle Registration Number: $vehicleReg');
@@ -120,18 +183,20 @@ class _HomePageState extends State<HomePage> {
                     SnackBar(content: Text('$selectedRole details submitted!')),
                   );
 
-                  // Clear fields
-                  gateController.clear();
-                  vehicleRegController.clear();
-                  seatsController.clear();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>  PassengerPage(),
+                    ),
+                  );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.all(15),
-                ),
                 child: const Text(
-                  'Submit',
-                  style: TextStyle(fontSize: 16),
+                  'Next',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],

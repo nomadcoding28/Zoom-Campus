@@ -11,6 +11,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final TextEditingController mail = TextEditingController();
+  final TextEditingController password = TextEditingController();
   bool rememberme = true;
   @override
   Widget build(BuildContext context) {
@@ -72,15 +74,18 @@ class _LoginState extends State<Login> {
                             textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 20),
-                          const SizedBox(
+                          SizedBox(
                             height: 40,
                             child: Input(
-                                hintText: 'Email', icon: Icons.email_outlined),
+                              controller: mail,
+                              hintText: 'Email', 
+                              icon: Icons.email_outlined),
                           ),
                           const SizedBox(height: 16),
-                          const SizedBox(
+                          SizedBox(
                             height: 40,
                             child: Input(
+                              controller: password,
                               hintText: 'password',
                               icon: Icons.lock,
                               isObscure: true,

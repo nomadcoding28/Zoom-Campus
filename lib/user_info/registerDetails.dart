@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:zoomcampus/controller/controller.dart';
 import 'package:zoomcampus/home/home_page.dart'; // Ensure this file and class exist
+import 'package:zoomcampus/data/data.dart' as dt;
 
 class RegisterDetailsPage extends StatefulWidget {
   const RegisterDetailsPage({super.key});
@@ -127,9 +129,13 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
                       .toList();
 
                   // Log the entered details
-                  print('Source: $source');
-                  print('Destination: $destination');
-                  print('Checkpoints: $checkpoints');
+                  // print('Source: $source');
+                  // print('Destination: $destination');
+                  // print('Checkpoints: $checkpoints');
+
+                  List route = [source]+checkpoints+[destination];
+
+                  dt.route = route.toString();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Details submitted successfully!')),
@@ -139,6 +145,18 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
                   sourceController.clear();
                   destinationController.clear();
                   checkpointControllers.clear();
+
+                  Map<String, dynamic> details = {
+                    "mail":dt.mail,
+                    "password":dt.password,
+                    "name":dt.username,
+                    "phNo":dt.phNo,
+                    "gender":dt.gender,
+                    "program":dt.program,
+                    "route":dt.route
+                  };
+
+                  registerUser(details);
 
                   // Navigate to the HomePage after submission
                   Navigator.pushReplacement(
