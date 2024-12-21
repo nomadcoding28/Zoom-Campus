@@ -9,7 +9,7 @@ class BottomNavigation extends StatefulWidget {
 }
 
 final List nav = [
-  const HomePage(),
+  HomePage(),
 ];
 
 class _BottomNavigationState extends State<BottomNavigation> {

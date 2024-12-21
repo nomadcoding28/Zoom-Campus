@@ -144,7 +144,7 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomePage(),
+                      builder: (context) =>  HomePage(),
                     ),
                   );
                 },
