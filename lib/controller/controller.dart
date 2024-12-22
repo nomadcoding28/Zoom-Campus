@@ -66,6 +66,49 @@ Future<int> riderregistercheck() async {
   return 0;
 }
 
+Future<int> riderAccept() async {
+  // String url = "http://"+ip+"/riderregister/";
+  var client = Client();
+  final response = await client.post(
+    Uri.http("192.168.31.48:8000","/riderAcceptRide/"),
+    headers: <String, String>{
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({"mail":mail}),
+  );
+
+  if (response.statusCode != 200) {
+    print("FAil\n\n\n\n");
+    return 0;
+  }else if(response.statusCode == 200){
+    print("\n\n\n\nRide Accepted\n\n\n\n");
+    return 1;
+  }
+  return 0;
+}
+
+
+Future<int> coriderRequest(String rider_mail) async {
+  // String url = "http://"+ip+"/riderregister/";
+  var client = Client();
+  final response = await client.post(
+    Uri.http("192.168.31.48:8000","/reqRider/"),
+    headers: <String, String>{
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({"mail":mail, "rider_mail":rider_mail}),
+  );
+
+  if (response.statusCode != 200) {
+    print("FAil\n\n\n\n");
+    return 0;
+  }else if(response.statusCode == 200){
+    print("\n\n\n\nRide Accepted\n\n\n\n");
+    return 1;
+  }
+  return 0;
+}
+
 
 
 

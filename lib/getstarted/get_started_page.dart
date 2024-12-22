@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:zoomcampus/auth/login.dart';
 
 class GetStartedPage extends StatelessWidget {
-  const GetStartedPage({super.key});
+  final VoidCallback toggleTheme; // Callback to toggle theme
+  final bool isDarkMode; // Flag to track the current theme
+
+  const GetStartedPage({
+    super.key,
+    required this.toggleTheme,
+    required this.isDarkMode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +26,19 @@ class GetStartedPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                    color: Colors.white,
+                  ),
+                  onPressed: toggleTheme, // Trigger the theme toggle
+                ),
+              ],
+            ),
+            const Spacer(),
             const Text(
               'Zoom to your campus Swiftly',
               style: TextStyle(
@@ -48,7 +68,7 @@ class GetStartedPage extends StatelessWidget {
             ),
             const SizedBox(
               height: 30.0,
-            )
+            ),
           ],
         ),
       ),

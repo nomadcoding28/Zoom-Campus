@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert'; // For JSON decoding
 import 'package:http/http.dart' as http;
+import 'package:zoomcampus/controller/controller.dart';
 import 'package:zoomcampus/data/data.dart';
 
 // class RiderPage extends StatefulWidget {
@@ -500,9 +501,11 @@ class _RiderPageState extends State<RiderPage> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             ElevatedButton(
-                                              onPressed: () {
+                                              onPressed: () async{
                                                 coridedrphNo = item['phNo'];
-                                                
+                                                destination = item['destination'];
+                                                int t = await riderAccept();
+                                                // map
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(
                                                   SnackBar(

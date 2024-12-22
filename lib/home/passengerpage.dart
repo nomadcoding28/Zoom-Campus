@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:convert'; // For JSON decoding
 import 'package:http/http.dart' as http;
+import 'package:zoomcampus/controller/controller.dart';
 import 'package:zoomcampus/data/data.dart';
 import 'package:zoomcampus/home/riderpage.dart';
+import 'package:zoomcampus/map/map.dart';
 class PassengerPage extends StatefulWidget {
 final String selectedCategory;
 final String gate;
@@ -204,7 +206,12 @@ class _PassengerPageState extends State<PassengerPage> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             ElevatedButton(
-                                              onPressed: () {
+                                              onPressed: () async{
+                                                coridermail=mail;
+                                                ridermail = item['mail'];
+                                                // int t = await coriderRequest(item['mail']);
+
+                                                Navigator.push(context, MaterialPageRoute(builder: (context)=> MyWidget()));
                                                 ScaffoldMessenger.of(context).showSnackBar(
                                                   SnackBar(
                                                     content: Text('Request sent to ${item['name']}'),

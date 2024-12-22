@@ -8,3 +8,7 @@ String ?gender;
 String ?program;
 String ?route;
 String ?coridedrphNo;
+String ?destination;
+String ?ridermail;
+String ?coridermail;
+String ?rideremail;

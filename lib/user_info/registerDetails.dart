@@ -156,7 +156,7 @@ class _RegisterDetailsPageState extends State<RegisterDetailsPage> {
                     "route":dt.route
                   };
 
-                  registerUser(details);
+                   registerUser(details);
 
                   // Navigate to the HomePage after submission
                   Navigator.pushReplacement(
