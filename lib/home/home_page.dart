@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zoomcampus/controller/controller.dart';
 import 'package:zoomcampus/home/passengerpage.dart';
 
 class HomePage extends StatefulWidget {
@@ -7,9 +8,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String selectedRole = '';
+  String selectedRole = 'Passenger';
   int _currentIndex = 0;
-
+  
   final TextEditingController gateController = TextEditingController();
   final TextEditingController otherGateController = TextEditingController();
   final TextEditingController vehicleRegController = TextEditingController();
@@ -49,8 +50,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => setState(() {
-                      selectedRole = 'Rider';
+                    onTap: () => setState((){
+                      // print("1");
+                      selectedRole = 'Rider' ;
+
                     }),
                     child: RoleBlock(
                       label: 'Rider',
@@ -105,6 +108,7 @@ class _HomePageState extends State<HomePage> {
                     labelText: 'Vehicle Registration Number',
                     border: OutlineInputBorder(),
                   ),
+                  
                 ),
                 const SizedBox(height: 10),
                 TextField(
@@ -114,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                     labelText: 'Number of Seats Available (Max 3)',
                     border: OutlineInputBorder(),
                   ),
+                  
                   onChanged: (value) {
                     if (value.isNotEmpty) {
                       final seats = int.tryParse(value);
@@ -175,8 +180,9 @@ class _HomePageState extends State<HomePage> {
                     print('Rider Gate: $gate');
                     print('Vehicle Registration Number: $vehicleReg');
                     print('Seats Available: $seats');
+                    print('Gate: $gate  '+gate.substring(5));
                   } else {
-                    print('Passenger Gate: $gate');
+                    print('Passenger Gate: '+ gate.substring(5));
                   }
 
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -186,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>  PassengerPage(),
+                      builder: (context) =>  PassengerPage(selectedCategory: selectedRole, gate:(gate.substring(5))),
                     ),
                   );
                 },

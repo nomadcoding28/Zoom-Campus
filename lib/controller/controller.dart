@@ -1,25 +1,27 @@
-import 'dart:io';
-
-import 'package:cronet_http/cronet_http.dart';
 import 'package:http/http.dart';
-import 'package:http/io_client.dart';
 import 'dart:convert';
-import 'package:zoomcampus/models/model.dart'; // Assume this contains the User model.
+// Assume this contains the User model.
 import '../data/data.dart';
 
-// Future fetchUserData() async {
-//   String url = "$ip/riderregister/";
-//   final response = await http.get(Uri.dataFromString(url));
+Future login(String mail, String password) async {
+  var client = Client();
+  final response = await client.post(
+    Uri.http("192.168.31.48:8000","/login/"),
+    headers: <String, String>{
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({"mail":mail, "password":password}),
+  );
 
-//   if (response.statusCode == 200) {
-//     print("Success\n\n\n\n");
-//   } else if (response.statusCode == 205) {
-//     print("Fail\n\n\n\n");
-//   } else {
-//     print("Exception\n\n\n\n");
-//     throw Exception('Failed to load user data');
-//   }
-// }
+  if (response.statusCode != 200) {
+    // print();
+    // print("FAil\n\n\n\n");
+    throw Exception('Failed to register user');
+  }else if(response.statusCode == 200){
+    print("\n\n\n\LogIN\n\n\n\n");
+    
+  }
+}
 
 Future<void> registerUser(Map<String, dynamic> registrationData) async {
   // String url = "http://"+ip+"/riderregister/";
@@ -40,6 +42,32 @@ Future<void> registerUser(Map<String, dynamic> registrationData) async {
     print("\n\n\n\nRegistered\n\n\n\n");
   }
 }
+
+
+
+Future<int> riderregistercheck() async {
+  // String url = "http://"+ip+"/riderregister/";
+  var client = Client();
+  final response = await client.post(
+    Uri.http("192.168.31.48:8000","/ridercheck/"),
+    headers: <String, String>{
+      'Content-Type': 'application/json',
+    },
+    body: jsonEncode({"mail":mail}),
+  );
+
+  if (response.statusCode != 200) {
+    print("FAil\n\n\n\n");
+    return 0;
+  }else if(response.statusCode == 200){
+    print("\n\n\n\nRegistered\n\n\n\n");
+    return 1;
+  }
+  return 0;
+}
+
+
+
 
 // Future registerUser(Map<String, dynamic> registrationData) async {
 //   final Client httpClient;

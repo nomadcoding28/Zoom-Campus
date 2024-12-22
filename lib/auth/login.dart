@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zoomcampus/auth/signup.dart';
 import 'package:zoomcampus/bottomNavigation/bottomNavigation.dart';
+import 'package:zoomcampus/controller/controller.dart' as ct;
 import 'package:zoomcampus/widgets/input.dart';
+import '../data/data.dart' as dt;
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -111,12 +113,18 @@ class _LoginState extends State<Login> {
                                 borderRadius: BorderRadius.circular(31)),
                             height: 40,
                             color: Colors.green,
-                            onPressed: () {
+                            onPressed: () async {
+                              dt.mail = mail.text;
+                              dt.password = password.text;
+                            await ct.login(mail.text, password.text);
+                              // print(await t);
+                              // if(await t =="1"){
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           const BottomNavigation()));
+                              // }
                             },
                             child: const Text(
                               'LOG IN',
